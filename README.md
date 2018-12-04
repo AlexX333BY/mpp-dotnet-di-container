@@ -1,2 +1,2 @@
-# mpp-dotnet-di-container
-Task #5 of MPP
+# Dependency Injection Container
+[Task #5](https://labs.ishimko.me/mpp-dotnet/5-di-container) of MPP
