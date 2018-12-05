@@ -33,7 +33,27 @@ namespace DependencyInjectionContainer
 
         protected IEnumerable<object> ResolveGeneric(Type dependency, string name)
         {
-            throw new NotImplementedException();
+            List<object> result = new List<object>();
+            IEnumerable<ImplementationContainer> implementationContainers = configuration.GetImplementations(dependency.GetGenericTypeDefinition())
+                .Where((implementationContainer) => implementationContainer.ImplementationType.IsGenericTypeDefinition
+                || dependency.IsAssignableFrom(implementationContainer.ImplementationType));
+            if (name != null)
+            {
+                implementationContainers = implementationContainers.Where((container) => container.Name == name);
+            }
+
+            object instance;
+            foreach (ImplementationContainer implementationContainer in implementationContainers)
+            {
+                instance = CreateByConstructor(implementationContainer.ImplementationType.MakeGenericType(dependency.GenericTypeArguments));
+
+                if (instance != null)
+                {
+                    result.Add(instance);
+                }
+            }
+
+            return result;
         }
 
         protected IEnumerable<object> ResolveNonGeneric(Type dependency, string name)
