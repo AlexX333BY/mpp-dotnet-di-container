@@ -4,27 +4,23 @@ namespace DependencyInjectionContainer
 {
     internal class ImplementationContainer
     {
-        Type ImplementationType
+        internal Type ImplementationType
         { get; }
 
-        bool IsSingleton
+        internal bool IsSingleton
         { get; }
 
-        object SingletonInstance
+        internal object SingletonInstance
         { get; set; }
 
-        string Name
+        internal string Name
         { get; }
 
-        bool IsOpenGeneric
-        { get; }
-
-        internal ImplementationContainer(Type implementationType, bool isSingleton, string name, bool isOpenGeneric)
+        internal ImplementationContainer(Type implementationType, bool isSingleton, string name)
         {
             ImplementationType = implementationType;
             IsSingleton = isSingleton;
             Name = name;
-            IsOpenGeneric = isOpenGeneric;
         }
     }
 }
