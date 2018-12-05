@@ -46,9 +46,15 @@ namespace DependencyInjectionContainer
                 };
             }
 
+            IEnumerable<ImplementationContainer> implementationContainers = configuration.GetImplementations(dependency);
+            if (name != null)
+            {
+                implementationContainers = implementationContainers.Where((implementation) => implementation.Name == name);
+            }
             List<object> result = new List<object>();
             object dependencyInstance;
-            foreach (ImplementationContainer container in configuration.GetImplementations(dependency))
+
+            foreach (ImplementationContainer container in implementationContainers)
             {
                 if (container.IsSingleton)
                 {
