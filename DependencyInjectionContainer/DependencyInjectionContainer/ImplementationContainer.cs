@@ -2,21 +2,21 @@
 
 namespace DependencyInjectionContainer
 {
-    internal class ImplementationContainer
+    public class ImplementationContainer
     {
-        internal Type ImplementationType
+        public Type ImplementationType
         { get; }
 
-        internal bool IsSingleton
+        public bool IsSingleton
         { get; }
 
-        internal object SingletonInstance
+        public object SingletonInstance
         { get; set; }
 
-        internal string Name
+        public string Name
         { get; }
 
-        internal ImplementationContainer(Type implementationType, bool isSingleton, string name)
+        public ImplementationContainer(Type implementationType, bool isSingleton, string name)
         {
             ImplementationType = implementationType;
             IsSingleton = isSingleton;

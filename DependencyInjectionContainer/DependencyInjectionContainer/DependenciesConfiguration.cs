@@ -5,7 +5,7 @@ namespace DependencyInjectionContainer
 {
     public class DependenciesConfiguration : IDependenciesConfiguration
     {
-        internal readonly Dictionary<Type, List<ImplementationContainer>> implementations;
+        protected readonly Dictionary<Type, List<ImplementationContainer>> implementations;
 
         public void Register<TDependency, TImplementation>(bool isSingleton = false, string name = null)
             where TDependency : class
@@ -53,6 +53,18 @@ namespace DependencyInjectionContainer
                 dependencyImplementations.RemoveAll((existingContainer) => existingContainer.Name == name);
             }
             dependencyImplementations.Add(container);
+        }
+
+        public IEnumerable<ImplementationContainer> GetImplementations<TDependency>()
+        {
+            if (implementations.TryGetValue(typeof(TDependency), out List<ImplementationContainer> dependencyImplementations))
+            {
+                return dependencyImplementations;
+            }
+            else
+            {
+                return new List<ImplementationContainer>();
+            }
         }
 
         public DependenciesConfiguration()
