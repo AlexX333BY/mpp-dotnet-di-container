@@ -80,7 +80,13 @@ namespace DependencyInjectionContainer
                 {
                     if (container.SingletonInstance == null)
                     {
-                        container.SingletonInstance = CreateByConstructor(container.ImplementationType);
+                        lock (container)
+                        {
+                            if (container.SingletonInstance == null)
+                            {
+                                container.SingletonInstance = CreateByConstructor(container.ImplementationType);
+                            }
+                        }
                     }
                     dependencyInstance = container.ImplementationType;
                 }
