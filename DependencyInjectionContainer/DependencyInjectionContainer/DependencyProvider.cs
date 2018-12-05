@@ -115,8 +115,7 @@ namespace DependencyInjectionContainer
                 {
                     foreach (ParameterInfo constructorParameter in constructors[constructor].GetParameters())
                     {
-                        parameters.Add(Resolve(constructorParameter.ParameterType, null)
-                            .Where((implementation) => implementation != null).FirstOrDefault());
+                        parameters.Add(Resolve(constructorParameter.ParameterType, null).FirstOrDefault());
                     }
                     instance = constructors[constructor].Invoke(parameters.ToArray());
                 }
