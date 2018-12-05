@@ -31,6 +31,11 @@ namespace DependencyInjectionContainer
                 throw new ArgumentException("Open generic cannot be singleton");
             }
 
+            if (implementation.IsAbstract)
+            {
+                throw new ArgumentException("Implementation cannot be abstract");
+            }
+
             ImplementationContainer container = new ImplementationContainer(implementation, isSingleton, name);
 
             if (!implementations.TryGetValue(dependency, out List<ImplementationContainer> dependencyImplementations))
