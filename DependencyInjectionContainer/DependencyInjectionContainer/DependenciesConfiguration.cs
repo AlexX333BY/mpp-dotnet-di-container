@@ -37,6 +37,10 @@ namespace DependencyInjectionContainer
             }
 
             ImplementationContainer container = new ImplementationContainer(implementation, isSingleton, name);
+            if (implementation.IsGenericType)
+            {
+                dependency = implementation.GetGenericTypeDefinition();
+            }
 
             if (!implementations.TryGetValue(dependency, out List<ImplementationContainer> dependencyImplementations))
             {
