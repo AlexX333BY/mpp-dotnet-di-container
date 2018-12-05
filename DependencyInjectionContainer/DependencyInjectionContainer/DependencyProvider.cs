@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DependencyInjectionContainer
 {
@@ -48,12 +46,54 @@ namespace DependencyInjectionContainer
                 };
             }
 
-            throw new NotImplementedException();
+            List<object> result = new List<object>();
+            object dependencyInstance;
+            foreach (ImplementationContainer container in configuration.GetImplementations(dependency))
+            {
+                if (container.IsSingleton)
+                {
+                    if (container.SingletonInstance == null)
+                    {
+                        container.SingletonInstance = CreateByConstructor(container.ImplementationType);
+                    }
+                    dependencyInstance = container.ImplementationType;
+                }
+                else
+                {
+                    dependencyInstance = CreateByConstructor(container.ImplementationType);
+                }
+
+                if (dependencyInstance != null)
+                {
+                    result.Add(dependencyInstance);
+                }
+            }
+            return result;
         }
 
-        protected ConstructorInfo GetConstructor(Type type)
+        protected object CreateByConstructor(Type type)
         {
-            return type.GetConstructors().OrderBy((constructor) => constructor.GetParameters().Length).FirstOrDefault();
+            ConstructorInfo[] constructors = type.GetConstructors().OrderBy((constructor) => constructor.GetParameters().Length).ToArray();
+            object instance = null;
+            List<object> parameters = new List<object>();
+
+            for (int constructor = 0; (constructor < constructors.Length) && (instance == null); ++constructor)
+            {
+                try
+                {
+                    foreach (ParameterInfo constructorParameter in constructors[constructor].GetParameters())
+                    {
+                        parameters.Add(Resolve(constructorParameter.ParameterType, null));
+                    }
+                    instance = constructors[constructor].Invoke(parameters.ToArray());
+                }
+                catch
+                {
+                    parameters.Clear();
+                }
+            }
+
+            return instance;
         }
 
         public DependencyProvider(IDependenciesConfiguration configuration)

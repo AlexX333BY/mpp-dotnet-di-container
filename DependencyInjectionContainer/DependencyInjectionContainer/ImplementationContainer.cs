@@ -21,6 +21,7 @@ namespace DependencyInjectionContainer
             ImplementationType = implementationType;
             IsSingleton = isSingleton;
             Name = name;
+            SingletonInstance = null;
         }
     }
 }

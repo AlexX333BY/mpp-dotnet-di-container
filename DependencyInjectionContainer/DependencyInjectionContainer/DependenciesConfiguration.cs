@@ -55,9 +55,9 @@ namespace DependencyInjectionContainer
             dependencyImplementations.Add(container);
         }
 
-        public IEnumerable<ImplementationContainer> GetImplementations<TDependency>()
+        public IEnumerable<ImplementationContainer> GetImplementations(Type type)
         {
-            if (implementations.TryGetValue(typeof(TDependency), out List<ImplementationContainer> dependencyImplementations))
+            if (implementations.TryGetValue(type, out List<ImplementationContainer> dependencyImplementations))
             {
                 return dependencyImplementations;
             }

@@ -5,7 +5,7 @@ namespace DependencyInjectionContainer
 {
     public interface IDependenciesConfiguration
     {
-        IEnumerable<ImplementationContainer> GetImplementations<TDependency>();
+        IEnumerable<ImplementationContainer> GetImplementations(Type type);
 
         void Register<TDependency, TImplementation>(bool isSingleton = false, string name = null)
             where TDependency : class
