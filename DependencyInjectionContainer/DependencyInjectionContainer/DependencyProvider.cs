@@ -9,14 +9,17 @@ namespace DependencyInjectionContainer
     {
         protected readonly IDependenciesConfiguration configuration;
 
-        public IEnumerable<TDependency> Resolve<TDependency>(string name = null) where TDependency : class
+        public IEnumerable<TDependency> Resolve<TDependency>(string name = null) 
+            where TDependency : class
         {
-            if (typeof(TDependency).IsValueType)
+            Type dependencyType = typeof(TDependency);
+
+            if (dependencyType.IsGenericTypeDefinition)
             {
-                throw new ArgumentException("Cannot create non-reference dependencies");
+                throw new ArgumentException("Generic type definition resolving is not supproted");
             }
 
-            return (IEnumerable<TDependency>)Resolve(typeof(TDependency), name);
+            return (IEnumerable<TDependency>)Resolve(dependencyType, name);
         }
 
         protected IEnumerable<object> Resolve(Type dependency, string name)
