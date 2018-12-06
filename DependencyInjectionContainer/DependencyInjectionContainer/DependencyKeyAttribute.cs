@@ -4,11 +4,12 @@ namespace DependencyInjectionContainer
 {
     public class DependencyKeyAttribute : Attribute
     {
-        protected readonly string name;
+        public string Name
+        { get; protected set; }
 
-        public DependencyKeyAttribute(String name)
+        public DependencyKeyAttribute(string name)
         {
-            this.name = name;
+            Name = name;
         }
     }
 }
