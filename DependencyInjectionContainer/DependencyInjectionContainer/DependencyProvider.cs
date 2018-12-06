@@ -48,11 +48,33 @@ namespace DependencyInjectionContainer
             object instance;
             foreach (ImplementationContainer implementationContainer in implementationContainers)
             {
-                instance = CreateByConstructor(implementationContainer.ImplementationType.MakeGenericType(dependency.GenericTypeArguments));
+                instance = CreateByConstructor(implementationContainer.ImplementationType
+                    .MakeGenericType(ResolveGenericTypeArguments(dependency.GenericTypeArguments)));
 
                 if (instance != null)
                 {
                     result.Add(instance);
+                }
+            }
+
+            return result;
+        }
+
+        protected Type[] ResolveGenericTypeArguments(Type[] dependencyArguments)
+        {
+            IEnumerable<ImplementationContainer> registeredDependencies;
+            Type[] result = new Type[dependencyArguments.Length];
+
+            for (int i = 0; i < dependencyArguments.Length; ++i)
+            {
+                registeredDependencies = configuration.GetImplementations(dependencyArguments[i]);
+                if (registeredDependencies.Count() == 0)
+                {
+                    result[i] = dependencyArguments[i];
+                }
+                else
+                {
+                    result[i] = registeredDependencies.First().ImplementationType;
                 }
             }
 
