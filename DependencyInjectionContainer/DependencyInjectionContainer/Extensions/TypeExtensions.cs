@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DependencyInjectionContainer.Extensions
 {
@@ -23,13 +24,13 @@ namespace DependencyInjectionContainer.Extensions
             {
                 comparedType = baseTypes.Dequeue();
                 baseType = comparedType.BaseType;
-                if (baseType != null)
+                if ((baseType != null) && (baseType.IsGenericType || baseType.IsGenericTypeDefinition))
                 {
-                    baseTypes.Enqueue(baseType);
+                    baseTypes.Enqueue(baseType.GetGenericTypeDefinition());
                 }
-                foreach (Type baseInterface in comparedType.GetInterfaces())
+                foreach (Type baseInterface in comparedType.GetInterfaces().Where((intf) => intf.IsGenericType || intf.IsGenericTypeDefinition))
                 {
-                    baseTypes.Enqueue(baseInterface);
+                     baseTypes.Enqueue(baseInterface.GetGenericTypeDefinition());
                 }
                 result = comparedType == type;
             } while (!result && (baseTypes.Count > 0));
