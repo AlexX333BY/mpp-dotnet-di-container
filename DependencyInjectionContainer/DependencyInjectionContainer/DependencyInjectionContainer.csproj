@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependenciesConfiguration.cs" />
+    <Compile Include="DependencyKeyAttribute.cs" />
     <Compile Include="DependencyProvider.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="IDependenciesConfiguration.cs" />
