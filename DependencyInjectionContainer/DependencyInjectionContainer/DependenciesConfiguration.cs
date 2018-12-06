@@ -82,7 +82,7 @@ namespace DependencyInjectionContainer
 
             if (implementations.TryGetValue(type, out List<ImplementationContainer> dependencyImplementations))
             {
-                return dependencyImplementations;
+                return new List<ImplementationContainer>(dependencyImplementations);
             }
             else
             {
