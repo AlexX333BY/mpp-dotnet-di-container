@@ -36,7 +36,7 @@ namespace DependencyInjectionContainer
             }
             else
             {
-                if (!dependency.IsClass && !dependency.IsAbstract && !dependency.IsInterface || !implementation.IsClass)
+                if (!dependency.IsClass && !dependency.IsAbstract && !dependency.IsInterface || (!implementation.IsClass || implementation.IsAbstract))
                 {
                     throw new ArgumentException("Wrong types");
                 }
