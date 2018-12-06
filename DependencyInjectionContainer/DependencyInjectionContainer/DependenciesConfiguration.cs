@@ -53,17 +53,24 @@ namespace DependencyInjectionContainer
                 dependency = dependency.GetGenericTypeDefinition();
             }
 
-            if (!implementations.TryGetValue(dependency, out List<ImplementationContainer> dependencyImplementations))
+            List<ImplementationContainer> dependencyImplementations;
+            lock (implementations)
             {
-                dependencyImplementations = new List<ImplementationContainer>();
-                implementations[dependency] = dependencyImplementations;
+                if (!implementations.TryGetValue(dependency, out dependencyImplementations))
+                {
+                    dependencyImplementations = new List<ImplementationContainer>();
+                    implementations[dependency] = dependencyImplementations;
+                }
             }
 
-            if (name != null)
+            lock (dependencyImplementations)
             {
-                dependencyImplementations.RemoveAll((existingContainer) => existingContainer.Name == name);
+                if (name != null)
+                {
+                    dependencyImplementations.RemoveAll((existingContainer) => existingContainer.Name == name);
+                }
+                dependencyImplementations.Add(container);
             }
-            dependencyImplementations.Add(container);
         }
 
         public IEnumerable<ImplementationContainer> GetImplementations(Type type)
