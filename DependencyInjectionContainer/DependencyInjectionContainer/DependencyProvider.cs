@@ -19,7 +19,7 @@ namespace DependencyInjectionContainer
                 throw new ArgumentException("Generic type definition resolving is not supproted");
             }
 
-            return (IEnumerable<TDependency>)Resolve(dependencyType, name);
+            return Resolve(dependencyType, name).OfType<TDependency>();
         }
 
         protected IEnumerable<object> Resolve(Type dependency, string name)
