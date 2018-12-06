@@ -16,9 +16,9 @@ namespace DependencyInjectionContainer
 
         public void Register(Type dependency, Type implementation, bool isSingleton = false, string name = null)
         {
-            if (dependency.IsValueType || implementation.IsValueType)
+            if (!(dependency.IsClass || dependency.IsAbstract) || !implementation.IsClass)
             {
-                throw new ArgumentException("Types should be reference types");
+                throw new ArgumentException("Wrong types");
             }
 
             if (!dependency.IsAssignableFrom(implementation))
@@ -29,11 +29,6 @@ namespace DependencyInjectionContainer
             if (implementation.IsGenericTypeDefinition && isSingleton)
             {
                 throw new ArgumentException("Open generic cannot be singleton");
-            }
-
-            if (implementation.IsAbstract)
-            {
-                throw new ArgumentException("Implementation cannot be abstract");
             }
 
             ImplementationContainer container = new ImplementationContainer(implementation, isSingleton, name);
