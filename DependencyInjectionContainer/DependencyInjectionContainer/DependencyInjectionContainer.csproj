@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="DependenciesConfiguration.cs" />
     <Compile Include="DependencyProvider.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="IDependenciesConfiguration.cs" />
     <Compile Include="IDependencyProvider.cs" />
     <Compile Include="ImplementationContainer.cs" />

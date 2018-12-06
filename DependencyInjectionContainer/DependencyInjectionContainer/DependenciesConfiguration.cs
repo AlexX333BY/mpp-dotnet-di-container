@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DependencyInjectionContainer.Extensions;
 
 namespace DependencyInjectionContainer
 {
@@ -16,19 +17,34 @@ namespace DependencyInjectionContainer
 
         public void Register(Type dependency, Type implementation, bool isSingleton = false, string name = null)
         {
-            if (!(dependency.IsClass || dependency.IsAbstract) || !implementation.IsClass)
+            if (dependency.IsGenericTypeDefinition ^ implementation.IsGenericTypeDefinition)
             {
-                throw new ArgumentException("Wrong types");
+                throw new ArgumentException("Open generics register should be with both open generic types");
             }
 
-            if (!dependency.IsAssignableFrom(implementation))
+            if (dependency.IsGenericTypeDefinition)
             {
-                throw new ArgumentException("Dependency is not assignable from implementation");
-            }
+                if (isSingleton)
+                {
+                    throw new ArgumentException("Open generic cannot be singleton");
+                }
 
-            if (implementation.IsGenericTypeDefinition && isSingleton)
+                if (!dependency.IsAssignableFromAsOpenGeneric(implementation))
+                {
+                    throw new ArgumentException("Dependency is not assignable from implementation");
+                }
+            }
+            else
             {
-                throw new ArgumentException("Open generic cannot be singleton");
+                if (!dependency.IsClass && !dependency.IsAbstract && !dependency.IsInterface || !implementation.IsClass)
+                {
+                    throw new ArgumentException("Wrong types");
+                }
+
+                if (!dependency.IsAssignableFrom(implementation))
+                {
+                    throw new ArgumentException("Dependency is not assignable from implementation");
+                }
             }
 
             ImplementationContainer container = new ImplementationContainer(implementation, isSingleton, name);
