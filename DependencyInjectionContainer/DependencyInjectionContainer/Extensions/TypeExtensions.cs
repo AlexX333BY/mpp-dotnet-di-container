@@ -28,7 +28,8 @@ namespace DependencyInjectionContainer.Extensions
                 {
                     baseTypes.Enqueue(baseType.GetGenericTypeDefinition());
                 }
-                foreach (Type baseInterface in comparedType.GetInterfaces().Where((intf) => intf.IsGenericType || intf.IsGenericTypeDefinition))
+                foreach (Type baseInterface in comparedType.GetInterfaces()
+                    .Where((intf) => intf.IsGenericType || intf.IsGenericTypeDefinition))
                 {
                      baseTypes.Enqueue(baseInterface.GetGenericTypeDefinition());
                 }

@@ -37,7 +37,8 @@ namespace DependencyInjectionContainer
             }
             else
             {
-                if (!dependency.IsClass && !dependency.IsAbstract && !dependency.IsInterface || (!implementation.IsClass || implementation.IsAbstract))
+                if (!dependency.IsClass && !dependency.IsAbstract && !dependency.IsInterface 
+                    || (!implementation.IsClass || implementation.IsAbstract))
                 {
                     throw new ArgumentException("Wrong types");
                 }
@@ -87,9 +88,11 @@ namespace DependencyInjectionContainer
                 collectionType = type;
             }
 
-            if (implementations.TryGetValue(collectionType, out List<ImplementationContainer> dependencyImplementations))
+            if (implementations.TryGetValue(collectionType, 
+                out List<ImplementationContainer> dependencyImplementations))
             {
-                IEnumerable<ImplementationContainer> result = new List<ImplementationContainer>(dependencyImplementations);
+                IEnumerable<ImplementationContainer> result = 
+                    new List<ImplementationContainer>(dependencyImplementations);
                 if (type.IsGenericType)
                 {
                     result = result.Where((impl) => impl.ImplementationType.IsGenericTypeDefinition 

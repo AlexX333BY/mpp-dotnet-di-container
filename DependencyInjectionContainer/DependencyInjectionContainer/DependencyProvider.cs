@@ -37,7 +37,8 @@ namespace DependencyInjectionContainer
         protected IEnumerable<object> ResolveGeneric(Type dependency, string name)
         {
             List<object> result = new List<object>();
-            IEnumerable<ImplementationContainer> implementationContainers = configuration.GetImplementations(dependency);
+            IEnumerable<ImplementationContainer> implementationContainers 
+                = configuration.GetImplementations(dependency);
             if (name != null)
             {
                 implementationContainers = implementationContainers.Where((container) => container.Name == name);
@@ -68,10 +69,12 @@ namespace DependencyInjectionContainer
                 };
             }
 
-            IEnumerable<ImplementationContainer> implementationContainers = configuration.GetImplementations(dependency);
+            IEnumerable<ImplementationContainer> implementationContainers = 
+                configuration.GetImplementations(dependency);
             if (name != null)
             {
-                implementationContainers = implementationContainers.Where((implementation) => implementation.Name == name);
+                implementationContainers = implementationContainers
+                    .Where((implementation) => implementation.Name == name);
             }
             List<object> result = new List<object>();
             object dependencyInstance;
@@ -107,7 +110,8 @@ namespace DependencyInjectionContainer
 
         protected object CreateByConstructor(Type type)
         {
-            ConstructorInfo[] constructors = type.GetConstructors().OrderBy((constructor) => constructor.GetParameters().Length).ToArray();
+            ConstructorInfo[] constructors = type.GetConstructors()
+                .OrderBy((constructor) => constructor.GetParameters().Length).ToArray();
             object instance = null;
             List<object> parameters = new List<object>();
             string parameterName;

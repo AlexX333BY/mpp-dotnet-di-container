@@ -40,7 +40,8 @@ namespace DependencyInjectionContainer.UnitTests
         {
             config.Register<IMyGenericInterface<IMyInterface>, MyGenericImplementation1<IMyInterface>>();
             config.Register<IMyGenericInterface<IMyInterface>, MyGenericImplementation2<IMyInterface>>();
-            var registeredImplementations = config.GetImplementations(typeof(IMyGenericInterface<IMyInterface>)).ToList();
+            var registeredImplementations = config.GetImplementations(typeof(IMyGenericInterface<IMyInterface>))
+                .ToList();
             Assert.AreEqual(2, registeredImplementations.Count);
 
             List<Type> expectedRegisteredTypes = new List<Type>
