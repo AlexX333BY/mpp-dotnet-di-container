@@ -135,13 +135,32 @@ namespace DependencyInjectionContainer.UnitTests
         [TestMethod]
         public void ExplicitNameResolveTest()
         {
+            config.Register<IMyInterface, MyImplementation1>(name: "1");
+            config.Register<IMyInterface, MyImplementation2>(name: "2");
+            provider = new DependencyProvider(config);
+            IEnumerable<IMyInterface> instances;
 
+            instances = provider.Resolve<IMyInterface>("1");
+            Assert.AreEqual(1, instances.Count());
+            Assert.AreEqual(typeof(MyImplementation1), instances.First().GetType());
+
+            instances = provider.Resolve<IMyInterface>("2");
+            Assert.AreEqual(1, instances.Count());
+            Assert.AreEqual(typeof(MyImplementation2), instances.First().GetType());
         }
 
         [TestMethod]
         public void ConstructorNameResolveTest()
         {
+            config.Register<IMyInterface, MyImplementation1>(name: "1");
+            config.Register<IMyInterface, MyImplementation2>(name: "2");
+            config.Register<IMyInterface, MyNamedConstructorParameterImplementation>();
+            provider = new DependencyProvider(config);
+            var instances = provider.Resolve<IMyInterface>().OfType<MyNamedConstructorParameterImplementation>();
 
+            Assert.AreEqual(1, instances.Count());
+            Assert.AreEqual(typeof(MyImplementation1), instances.First().intfImpl1.GetType());
+            Assert.AreEqual(typeof(MyImplementation2), instances.First().intfImpl2.GetType());
         }
     }
 }

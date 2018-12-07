@@ -52,7 +52,7 @@
     <Compile Include="AccessoryClasses\MyGenericImplementation1.cs" />
     <Compile Include="AccessoryClasses\IMyGenericInterface.cs" />
     <Compile Include="AccessoryClasses\MyGenericImplementation2.cs" />
-    <Compile Include="AccessoryClasses\MyGenericNamedConstructorParameter.cs" />
+    <Compile Include="AccessoryClasses\MyNamedConstructorParameterImplementation.cs" />
     <Compile Include="AccessoryClasses\MyImplementation1.cs" />
     <Compile Include="AccessoryClasses\MyImplementation2.cs" />
     <Compile Include="AccessoryClasses\IMyInterface.cs" />

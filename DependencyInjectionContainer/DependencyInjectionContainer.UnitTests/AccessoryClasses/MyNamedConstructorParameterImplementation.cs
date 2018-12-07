@@ -1,11 +1,11 @@
 ﻿namespace DependencyInjectionContainer.UnitTests.AccessoryClasses
 {
-    class MyGenericNamedConstructorParameter
+    class MyNamedConstructorParameterImplementation : IMyInterface
     {
         public readonly IMyInterface intfImpl1;
         public readonly IMyInterface intfImpl2;
 
-        public MyGenericNamedConstructorParameter([DependencyKey("1")] IMyInterface intfImpl1, 
+        public MyNamedConstructorParameterImplementation([DependencyKey("1")] IMyInterface intfImpl1, 
             [DependencyKey("2")] IMyInterface intfImpl2)
         {
             this.intfImpl1 = intfImpl1;
