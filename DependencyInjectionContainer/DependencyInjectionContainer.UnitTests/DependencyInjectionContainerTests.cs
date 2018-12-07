@@ -109,6 +109,7 @@ namespace DependencyInjectionContainer.UnitTests
         [TestMethod]
         public void OpenGenericTypeResolveTest()
         {
+            config.Register<IMyInterface, MyImplementation1>();
             config.Register(typeof(IMyGenericInterface<>), typeof(MyGenericImplementation1<>));
             config.Register(typeof(IMyGenericInterface<>), typeof(MyGenericImplementation2<>));
             provider = new DependencyProvider(config);
@@ -122,6 +123,9 @@ namespace DependencyInjectionContainer.UnitTests
             };
             CollectionAssert.AreEquivalent(expectedInstancesTypes,
                 instances.Select((instance) => instance.GetType()).ToList());
+
+            Assert.AreEqual(typeof(MyImplementation1), 
+                instances.OfType<MyGenericImplementation1<IMyInterface>>().First().field.GetType());
         }
 
         [TestMethod]
