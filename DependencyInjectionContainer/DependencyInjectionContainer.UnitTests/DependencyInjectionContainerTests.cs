@@ -72,25 +72,61 @@ namespace DependencyInjectionContainer.UnitTests
         [TestMethod]
         public void NonGenericTypeResolveTest()
         {
+            config.Register<IMyInterface, MyImplementation1>();
+            config.Register<IMyInterface, MyImplementation2>();
+            provider = new DependencyProvider(config);
+            var instances = provider.Resolve<IMyInterface>();
+            Assert.AreEqual(2, instances.Count());
 
+            List<Type> expectedInstancesTypes = new List<Type>
+            {
+                typeof(MyImplementation1),
+                typeof(MyImplementation2)
+            };
+            CollectionAssert.AreEquivalent(expectedInstancesTypes,
+                instances.Select((instance) => instance.GetType()).ToList());
         }
 
         [TestMethod]
         public void GenericTypeResolveTest()
         {
+            config.Register<IMyGenericInterface<IMyInterface>, MyGenericImplementation1<IMyInterface>>();
+            config.Register<IMyGenericInterface<IMyInterface>, MyGenericImplementation2<IMyInterface>>();
+            provider = new DependencyProvider(config);
+            var instances = provider.Resolve<IMyGenericInterface<IMyInterface>>();
+            Assert.AreEqual(2, instances.Count());
 
+            List<Type> expectedInstancesTypes = new List<Type>
+            {
+                typeof(MyGenericImplementation1<IMyInterface>),
+                typeof(MyGenericImplementation2<IMyInterface>)
+            };
+            CollectionAssert.AreEquivalent(expectedInstancesTypes,
+                instances.Select((instance) => instance.GetType()).ToList());
         }
 
         [TestMethod]
         public void OpenGenericTypeResolveTest()
         {
+            config.Register(typeof(IMyGenericInterface<>), typeof(MyGenericImplementation1<>));
+            config.Register(typeof(IMyGenericInterface<>), typeof(MyGenericImplementation2<>));
+            provider = new DependencyProvider(config);
+            var instances = provider.Resolve<IMyGenericInterface<IMyInterface>>();
+            Assert.AreEqual(2, instances.Count());
 
+            List<Type> expectedInstancesTypes = new List<Type>
+            {
+                typeof(MyGenericImplementation1<IMyInterface>),
+                typeof(MyGenericImplementation2<IMyInterface>)
+            };
+            CollectionAssert.AreEquivalent(expectedInstancesTypes,
+                instances.Select((instance) => instance.GetType()).ToList());
         }
 
         [TestMethod]
         public void SingletonResolveTest()
         {
-
+            
         }
 
         [TestMethod]
