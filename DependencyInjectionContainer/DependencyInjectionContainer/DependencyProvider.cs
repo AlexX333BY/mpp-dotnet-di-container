@@ -90,7 +90,7 @@ namespace DependencyInjectionContainer
                             }
                         }
                     }
-                    dependencyInstance = container.ImplementationType;
+                    dependencyInstance = container.SingletonInstance;
                 }
                 else
                 {
