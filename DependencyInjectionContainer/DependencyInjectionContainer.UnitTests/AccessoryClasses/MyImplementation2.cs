@@ -1,6 +1,6 @@
 ﻿namespace DependencyInjectionContainer.UnitTests.AccessoryClasses
 {
-    public class MyImplementation2 : IMyInterface
+    class MyImplementation2 : IMyInterface
     {
     }
 }

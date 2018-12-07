@@ -1,6 +1,6 @@
 ﻿namespace DependencyInjectionContainer.UnitTests.AccessoryClasses
 {
-    public class MyGenericNamedConstructorParameter
+    class MyGenericNamedConstructorParameter
     {
         public readonly IMyInterface intfImpl1;
         public readonly IMyInterface intfImpl2;
