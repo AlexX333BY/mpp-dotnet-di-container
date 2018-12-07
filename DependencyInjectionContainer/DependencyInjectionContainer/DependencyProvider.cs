@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace DependencyInjectionContainer
 {
     public class DependencyProvider : IDependencyProvider
     {
         protected readonly IDependenciesConfiguration configuration;
+
+        protected readonly ConcurrentDictionary<int, Stack<Type>> recursionTypesExcluder;
 
         public IEnumerable<TDependency> Resolve<TDependency>(string name = null) 
             where TDependency : class
@@ -17,6 +21,14 @@ namespace DependencyInjectionContainer
             if (dependencyType.IsGenericTypeDefinition)
             {
                 throw new ArgumentException("Generic type definition resolving is not supproted");
+            }
+            if (recursionTypesExcluder.TryGetValue(Thread.CurrentThread.ManagedThreadId, out Stack<Type> types))
+            {
+                types.Clear();
+            }
+            else
+            {
+                recursionTypesExcluder[Thread.CurrentThread.ManagedThreadId] = new Stack<Type>();
             }
 
             return Resolve(dependencyType, name).OfType<TDependency>();
@@ -38,7 +50,8 @@ namespace DependencyInjectionContainer
         {
             List<object> result = new List<object>();
             IEnumerable<ImplementationContainer> implementationContainers 
-                = configuration.GetImplementations(dependency);
+                = configuration.GetImplementations(dependency)
+                .Where((impl) => !recursionTypesExcluder[Thread.CurrentThread.ManagedThreadId].Contains(impl.ImplementationType));
             if (name != null)
             {
                 implementationContainers = implementationContainers.Where((container) => container.Name == name);
@@ -70,7 +83,8 @@ namespace DependencyInjectionContainer
             }
 
             IEnumerable<ImplementationContainer> implementationContainers = 
-                configuration.GetImplementations(dependency);
+                configuration.GetImplementations(dependency)
+                .Where((impl) => !recursionTypesExcluder[Thread.CurrentThread.ManagedThreadId].Contains(impl.ImplementationType));
             if (name != null)
             {
                 implementationContainers = implementationContainers
@@ -114,6 +128,7 @@ namespace DependencyInjectionContainer
                 .OrderBy((constructor) => constructor.GetParameters().Length).ToArray();
             object instance = null;
             List<object> parameters = new List<object>();
+            recursionTypesExcluder[Thread.CurrentThread.ManagedThreadId].Push(type);
 
             for (int constructor = 0; (constructor < constructors.Length) && (instance == null); ++constructor)
             {
@@ -132,12 +147,14 @@ namespace DependencyInjectionContainer
                 }
             }
 
+            recursionTypesExcluder[Thread.CurrentThread.ManagedThreadId].Pop();
             return instance;
         }
 
         public DependencyProvider(IDependenciesConfiguration configuration)
         {
             this.configuration = configuration;
+            recursionTypesExcluder = new ConcurrentDictionary<int, Stack<Type>>();
         }
     }
 }
