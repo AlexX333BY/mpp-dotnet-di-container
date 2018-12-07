@@ -37,9 +37,7 @@ namespace DependencyInjectionContainer
         protected IEnumerable<object> ResolveGeneric(Type dependency, string name)
         {
             List<object> result = new List<object>();
-            IEnumerable<ImplementationContainer> implementationContainers = configuration.GetImplementations(dependency.GetGenericTypeDefinition())
-                .Where((implementationContainer) => implementationContainer.ImplementationType.IsGenericTypeDefinition
-                || dependency.IsAssignableFrom(implementationContainer.ImplementationType));
+            IEnumerable<ImplementationContainer> implementationContainers = configuration.GetImplementations(dependency);
             if (name != null)
             {
                 implementationContainers = implementationContainers.Where((container) => container.Name == name);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DependencyInjectionContainer.Extensions;
 
 namespace DependencyInjectionContainer
@@ -75,14 +76,27 @@ namespace DependencyInjectionContainer
 
         public IEnumerable<ImplementationContainer> GetImplementations(Type type)
         {
+            Type collectionType;
+
             if (type.IsGenericType)
             {
-                type = type.GetGenericTypeDefinition();
+                collectionType = type.GetGenericTypeDefinition();
+            }
+            else
+            {
+                collectionType = type;
             }
 
-            if (implementations.TryGetValue(type, out List<ImplementationContainer> dependencyImplementations))
+            if (implementations.TryGetValue(collectionType, out List<ImplementationContainer> dependencyImplementations))
             {
-                return new List<ImplementationContainer>(dependencyImplementations);
+                IEnumerable<ImplementationContainer> result = new List<ImplementationContainer>(dependencyImplementations);
+                if (type.IsGenericType)
+                {
+                    result = result.Where((impl) => impl.ImplementationType.IsGenericTypeDefinition 
+                                                    || type.IsAssignableFrom(impl.ImplementationType));
+                }
+
+                return result;
             }
             else
             {
