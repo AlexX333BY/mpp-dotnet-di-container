@@ -126,7 +126,10 @@ namespace DependencyInjectionContainer.UnitTests
         [TestMethod]
         public void SingletonResolveTest()
         {
-            
+            config.Register<IMyInterface, MyImplementation1>(true);
+            provider = new DependencyProvider(config);
+
+            Assert.ReferenceEquals(provider.Resolve<IMyInterface>().First(), provider.Resolve<IMyInterface>().First());
         }
 
         [TestMethod]
