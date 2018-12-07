@@ -114,7 +114,6 @@ namespace DependencyInjectionContainer
                 .OrderBy((constructor) => constructor.GetParameters().Length).ToArray();
             object instance = null;
             List<object> parameters = new List<object>();
-            string parameterName;
 
             for (int constructor = 0; (constructor < constructors.Length) && (instance == null); ++constructor)
             {
@@ -122,15 +121,8 @@ namespace DependencyInjectionContainer
                 {
                     foreach (ParameterInfo constructorParameter in constructors[constructor].GetParameters())
                     {
-                        if (Attribute.IsDefined(constructorParameter, typeof(DependencyKeyAttribute)))
-                        {
-                            parameterName = constructorParameter.GetCustomAttribute<DependencyKeyAttribute>().Name;
-                        }
-                        else
-                        {
-                            parameterName = null;
-                        }
-                        parameters.Add(Resolve(constructorParameter.ParameterType, parameterName).FirstOrDefault());
+                        parameters.Add(Resolve(constructorParameter.ParameterType, 
+                            constructorParameter.GetCustomAttribute<DependencyKeyAttribute>()?.Name).FirstOrDefault());
                     }
                     instance = constructors[constructor].Invoke(parameters.ToArray());
                 }
